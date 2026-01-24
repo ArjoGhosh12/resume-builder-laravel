@@ -1,163 +1,165 @@
-Resume Builder
-
+<div align="center">
+🎨 Resume Builder
 A Modern Full-Stack Resume Building Platform
+<p align="center"> <img src="https://img.shields.io/badge/Frontend-Vite%20%2B%20React-646CFF?style=for-the-badge&logo=vite&logoColor=white" /> <img src="https://img.shields.io/badge/Backend-Laravel-EF3B2D?style=for-the-badge&logo=laravel&logoColor=white" /> <img src="https://img.shields.io/badge/API-RESTful-0A0A0A?style=for-the-badge" /> </p> <p align="center"> <img src="https://img.shields.io/badge/Status-Active-success?style=flat-square" /> <img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" /> <img src="https://img.shields.io/badge/Contributions-Welcome-brightgreen?style=flat-square" /> </p> </div>
+✨ Overview
 
-A scalable, full-stack Resume Builder application built with a modern frontend and a robust backend architecture. The project follows clean separation of concerns, enabling independent development and deployment of frontend and backend services.
+Resume Builder is a scalable, full-stack web application designed to help users create, manage, and preview professional resumes with ease.
 
-Overview
+The project follows a decoupled architecture, enabling independent development of frontend and backend services while maintaining clean API boundaries.
 
-This application allows users to create, manage, and preview professional resumes through a responsive UI powered by a RESTful backend.
-
-Frontend built with Vite for speed and modern DX
-
-Backend built with Laravel for reliability and scalability
-
-API-driven architecture suitable for future expansion
-
-Designed with maintainability and real-world usage in mind
-
-Repository Structure
+🗂️ Project Structure
 resume-builder/
 │
-├── resume-builder-frontend/    # Vite-based frontend application
+├── resume-builder-frontend/    # Vite + React frontend
 │
 ├── resume-builder-backend/     # Laravel backend (REST API)
 │
 └── README.md
 
-Technology Stack
-Frontend
+🧰 Tech Stack
+🎨 Frontend
 
-Vite
+⚡ Vite
 
-React
+⚛️ React
 
-JavaScript / TypeScript
+🟨 JavaScript / TypeScript
 
-Tailwind CSS (if applicable)
+💨 Tailwind CSS (if enabled)
 
-Axios / Fetch API
+🌐 Axios / Fetch API
 
-Backend
+🛠 Backend
 
-Laravel
+🔴 Laravel
 
-PHP 8+
+🐘 PHP 8+
 
-MySQL / PostgreSQL
+🗄 MySQL / PostgreSQL
 
-RESTful API architecture
+🔐 Authentication-ready (Sanctum / JWT)
 
-Authentication-ready (Sanctum / JWT if enabled)
+📡 RESTful APIs
 
-Key Features
+🚀 Features
 
-User authentication (login / signup)
+👤 User authentication (login / signup)
 
-Resume creation and editing
+📝 Resume creation & editing
 
-Structured resume sections (education, experience, skills, projects)
+📂 Structured resume sections
 
-Live resume preview
+👀 Live resume preview
 
-Clean API separation between frontend and backend
+🔗 API-driven frontend–backend communication
 
-Scalable project structure for future enhancements
+📈 Scalable and maintainable architecture
 
-Prerequisites
+⚙️ Prerequisites
 
-Ensure the following tools are installed on your system:
+Ensure you have the following installed:
 
-Node.js (v18+ recommended)
+🟢 Node.js (v18+)
 
-npm or yarn
+📦 npm or yarn
 
-PHP (v8.1+ recommended)
+🐘 PHP (v8.1+)
 
-Composer
+🎼 Composer
 
-MySQL or PostgreSQL
+🗄 MySQL / PostgreSQL
 
-Git
+🔧 Git
 
-Frontend Setup (Vite)
+▶️ Frontend Setup (Vite)
 cd resume-builder-frontend
 npm install
 npm run dev
 
 
-Frontend development server will start at:
+Frontend runs at:
 
 http://localhost:5173
 
-Backend Setup (Laravel)
+▶️ Backend Setup (Laravel)
 cd resume-builder-backend
 composer install
 cp .env.example .env
 php artisan key:generate
 
-Database Configuration
+🗄 Database Configuration
 
-Update your .env file with database credentials:
+Update .env:
 
 DB_DATABASE=your_database
 DB_USERNAME=your_username
 DB_PASSWORD=your_password
 
-Run Migrations
+🔄 Run Migrations
 php artisan migrate
 
-Start Backend Server
+▶️ Start Backend Server
 php artisan serve
 
 
-Backend server will be available at:
+Backend runs at:
 
 http://localhost:8000
 
-Frontend–Backend Integration
+🔗 Frontend–Backend Integration
 
-Laravel exposes REST APIs under /api
+Backend APIs exposed under /api
 
-Frontend consumes APIs using Axios / Fetch
+Frontend consumes APIs via Axios / Fetch
 
-Configure API base URL in frontend environment file
-
-Example (.env in frontend):
+Configure API base URL in frontend .env
 
 VITE_API_BASE_URL=http://localhost:8000/api
 
-Development Workflow
+🔄 Development Workflow
 Create feature branch
-→ Develop frontend/backend features
-→ Commit changes with meaningful messages
+→ Develop frontend/backend
+→ Commit meaningful changes
 → Push to GitHub
-→ Merge into main branch
+→ Merge into main
 
-Version Control Commands
+🧪 Version Control
 git add .
-git commit -m "Describe your change clearly"
+git commit -m "Clear and descriptive message"
 git push origin main
 
-Future Enhancements
+🌱 Future Enhancements
 
-Multiple resume templates
+📄 Multiple resume templates
 
-PDF export functionality
+📤 PDF export
 
-Drag-and-drop resume sections
+🧲 Drag-and-drop sections
 
-Admin dashboard
+🛠 Admin dashboard
 
-Resume sharing via public links
+🌍 Multi-language support
 
-Multi-language support
+🔗 Public resume sharing
 
-License
+📜 License
 
 This project is licensed under the MIT License.
 
-Author
+👨‍💻 Author
 
 Arjo Ghosh
-Full-Stack Developer | Open-Source Enthusiast
+Full-Stack Developer • Open-Source Enthusiast
+
+If you want, I can next:
+
+Add screenshots & demo GIFs
+
+Create a dark-theme README
+
+Optimize this for recruiter visibility
+
+Add CI/CD & deployment sections
+
+Just tell me what to enhance next.
