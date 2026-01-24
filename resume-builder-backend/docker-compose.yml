@@ -1,0 +1,25 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: resume-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: resume_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: resume-phpmyadmin
+    environment:
+      PMA_HOST: resume-mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: rootpass
+    ports:
+      - "8081:80"
+
+volumes:
+  mysql_data: 

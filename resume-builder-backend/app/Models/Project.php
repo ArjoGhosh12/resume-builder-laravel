@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+
+class Project extends Model
+{
+    use HasFactory, HasUuids;
+
+    public $timestamps = false;
+
+    protected $fillable = [
+        'name',
+        'description',
+        'technologies',
+        'liveLink',
+        'githubLink',
+        'startDate',
+        'endDate',
+        'resume_id',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'technologies' => 'array',
+        ];
+    }
+
+    protected $attributes = ['technologies' => '[]'];
+}
+
