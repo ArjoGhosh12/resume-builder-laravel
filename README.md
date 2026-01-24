@@ -151,15 +151,3 @@ This project is licensed under the MIT License.
 
 Arjo Ghosh
 Full-Stack Developer • Open-Source Enthusiast
-
-If you want, I can next:
-
-Add screenshots & demo GIFs
-
-Create a dark-theme README
-
-Optimize this for recruiter visibility
-
-Add CI/CD & deployment sections
-
-Just tell me what to enhance next.
