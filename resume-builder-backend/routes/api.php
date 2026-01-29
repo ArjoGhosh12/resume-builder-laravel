@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\Api\TemplateController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,13 @@ use Illuminate\Support\Facades\Route;
 */
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
+Route::post('/admin/users/{user}/block', [AdminController::class, 'toggleBlock'])
+    ->middleware(['auth:sanctum', 'admin']);
+
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::get('/admin/resumes', [AdminController::class, 'allResumes']);
+});
 
 
 Route::middleware('auth:sanctum')->group(function () {

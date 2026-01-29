@@ -43,6 +43,7 @@ export function ResumeProvider({ children, initialResume }) {
   /* ================= LIST LOGIC ================= */
 
   const fetchResumes = async () => {
+   
     try {
       const res = await api.get("/resumes");
       const list = Array.isArray(res.data)

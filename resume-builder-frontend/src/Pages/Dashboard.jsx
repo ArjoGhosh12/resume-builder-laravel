@@ -6,225 +6,217 @@ import { useAuth } from "../context/AuthContext";
 import {
   Trash2,
   AlertCircle,
-  X,
   Plus,
-  Download,
   FileText,
   Clock,
-  ShieldCheck,
-  Zap,
-  Calendar,
-  TrendingUp,
   LogOut,
-  Sparkles,
+  ArrowUpRight,
+  Download,
+  Search,
+  Layers,
+  Database,
+  Layout,
 } from "lucide-react";
 
+/* --- Animations --- */
 const containerVariants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+  visible: { opacity: 1, transition: { staggerChildren: 0.05 } },
 };
 
 const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: { type: "spring", stiffness: 300, damping: 24 },
-  },
+  hidden: { y: 15, opacity: 0 },
+  visible: { y: 0, opacity: 1, transition: { duration: 0.3, ease: "easeOut" } },
 };
-
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const { resumes, loading, deleteResume, fetchResumes } = useResume();
   const { user, logout } = useAuth();
+
   const [error, setError] = useState(null);
-  
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetchResumes();
   }, [fetchResumes]);
 
   const stats = useMemo(() => {
-    if (!resumes.length)
-      return {
-        maxDay: "N/A",
-        counts: new Array(7).fill(0),
-        days: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-      };
-    const days = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
-    const counts = new Array(7).fill(0);
-    resumes.forEach((r) => counts[new Date(r.created_at).getDay()]++);
-    const maxVal = Math.max(...counts);
-    return { maxDay: days[counts.indexOf(maxVal)], counts, days };
+    const total = resumes.length;
+    const usagePercent = (total / 20) * 100;
+    return { total, usagePercent, remaining: 20 - total };
   }, [resumes]);
 
-  const createResume = async () => {
-    if (resumes.length < 20) navigate("/resume/new");
-    else {
+  const filteredResumes = useMemo(() => {
+    return resumes.filter((r) =>
+      r.title?.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
+  }, [resumes, searchQuery]);
+
+  /* ---------------- Unchanged Logic ---------------- */
+  const createResume = () => {
+    if (user?.is_blocked) {
+      setError(
+        "Your account has been blocked by admin. You cannot create new resumes.",
+      );
+      setTimeout(() => setError(null), 5000);
+      return;
+    }
+    if (resumes.length < 20) {
+      navigate("/resume/new");
+    } else {
       setError("Storage Limit: 20/20 Resumes Used");
       setTimeout(() => setError(null), 5000);
     }
   };
-  
 
-const [deleteConfirm, setDeleteConfirm] = useState(null); // Stores the ID of the resume to delete
-
-const handleDeleteClick = (id) => {
-  setDeleteConfirm(id);
-};
-
-const confirmDelete = async () => {
-  if (deleteConfirm) {
-    await deleteResume(deleteConfirm);
-
-    setDeleteConfirm(null); // Close the toast after deleting
-  }
-};
+  const confirmDelete = async () => {
+    if (deleteConfirm) {
+      await deleteResume(deleteConfirm);
+      setDeleteConfirm(null);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-red-600 selection:text-white">
-      {/* NAVIGATION */}
-      <nav className="sticky top-0 z-[60] bg-white border-b border-slate-100">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
-          <div
-            className="flex items-center gap-3 cursor-pointer"
-            onClick={() => navigate("/")}
-          >
-            <div className="size-10 bg-red-600 rounded-2xl flex items-center justify-center shadow-lg shadow-red-100">
-              <ShieldCheck className="text-white w-6 h-6" />
-            </div>
-            <h1 className="text-2xl font-black tracking-tighter text-slate-900 uppercase">
-              Resume<span className="text-red-600">Pro</span>
-            </h1>
+    <div className="min-h-screen bg-[#FCFCFC] text-slate-900 font-sans">
+      {/* --- BRANDED NAVIGATION --- */}
+      <nav className="h-20 border-b border-slate-100 flex items-center justify-between px-10 bg-white sticky top-0 z-50">
+        <div
+          className="flex items-center gap-3 cursor-pointer"
+          onClick={() => navigate("/")}
+        >
+          <div className="size-10 bg-[#E11D48] rounded-xl flex items-center justify-center shadow-lg shadow-rose-100">
+            <FileText className="text-white w-6 h-6" strokeWidth={2.5} />
           </div>
+          <span className="text-xl font-bold tracking-tight text-slate-800 uppercase">
+            Resume<span className="text-[#E11D48] font-black">Pro</span>
+          </span>
+        </div>
 
-          <div className="flex items-center gap-6">
-            <button
-              onClick={logout}
-              className="size-10 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:text-red-600 hover:bg-red-50 transition-all"
-            >
-              <LogOut size={20} />
-            </button>
+        <div className="flex items-center gap-6">
+          <div className="text-right hidden sm:block">
+            <button 
+  onClick={logout} 
+  className="group relative flex items-center gap-2 px-4 py-2 text-[16px] font-bold tracking-tighter text-slate-600 hover:text-white transition-colors duration-300"
+>
+  {/* Hover Background Layer */}
+  <span className="absolute inset-0 bg-red-600 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 -z-10"></span>
+  
+  <LogOut size={20} className="text-red-600 group-hover:text-white transition-colors" />
+  Logout
+</button>
           </div>
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-6 py-12">
-        {/* TOP ANALYTICS GRID */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-16">
-          {/* ACTIVITY BAR GRAPH CARD */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="lg:col-span-8 bg-white border-2 border-slate-100 rounded-[2.5rem] p-10 flex flex-col justify-between min-h-[400px] shadow-sm"
-          >
+      <main className="max-w-7xl mx-auto px-10 py-12">
+        {/* --- UNIQUE DASHBOARD TITLE SECTION --- */}
+        <section className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div className="flex items-start gap-5">
+            <div className="w-1.5 h-16 bg-[#E11D48] rounded-full hidden md:block" />
             <div>
-              <div className="flex items-center gap-2 mb-6">
-                <Sparkles size={16} className="text-red-600" />
-                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-red-600">
-                  Activity Report
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">
+                  System Workspace
+                </span>
+                <span className="px-2 py-0.5 rounded bg-rose-50 text-[10px] font-bold text-[#E11D48] uppercase">
+                  User
                 </span>
               </div>
-              <h2 className="text-4xl font-black mb-2 text-slate-900">
-                Welcome, {user?.name?.split(" ")[0]}
-              </h2>
-              <p className="text-slate-500 font-medium italic">
-                Peak productivity on{" "}
-                <span className="text-red-600 font-bold">{stats.maxDay}s</span>
-              </p>
+              <h1 className="text-5xl font-black tracking-tighter text-slate-900">
+                Hello<span className="text-[#E11D48]"> {user?.name}!</span>
+              </h1>
             </div>
+          </div>
 
-            {/* THE BAR GRAPH */}
-            <div className="flex items-end justify-between gap-4 h-48 mt-8 px-2 border-b-2 border-slate-50 pb-2">
-              {stats.counts.map((count, i) => (
-                <div
-                  key={i}
-                  className="flex-1 flex flex-col items-center gap-3 h-full justify-end group"
-                >
-                  <div className="invisible group-hover:visible bg-red-600 text-white text-[10px] py-1 px-2 rounded mb-1 font-bold">
-                    {count}
-                  </div>
-                  <motion.div
-                    initial={{ height: 0 }}
-                    animate={{
-                      height: `${(count / (Math.max(...stats.counts) || 1)) * 100}%`,
-                    }}
-                    className={`w-full max-w-[40px] rounded-t-xl transition-all duration-500 shadow-sm ${count === Math.max(...stats.counts) ? "bg-red-600" : "bg-red-100"}`}
-                  />
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">
-                    {stats.days[i].substring(0, 3)}
-                  </span>
-                </div>
-              ))}
+          <div className="relative group self-start md:self-auto">
+            <Search className="absolute left-0 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 group-focus-within:text-[#E11D48] transition-colors" />
+            <input
+              type="text"
+              placeholder="Find a document..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-7 pr-4 py-2 bg-transparent border-b border-slate-200 focus:border-[#E11D48] transition-all outline-none text-sm font-medium w-full md:w-64"
+            />
+          </div>
+        </section>
+
+        {/* --- BLOCKED USER UI --- */}
+        {user?.is_blocked && (
+          <div className="mb-10 bg-rose-50 border border-rose-100 text-rose-700 p-5 rounded-2xl flex items-center gap-3 shadow-sm">
+            <AlertCircle size={20} strokeWidth={3} />
+            <p className="font-bold text-sm tracking-tight uppercase">
+              Restricted: Creation disabled by administrator.
+            </p>
+          </div>
+        )}
+
+        {/* --- STATISTICS --- */}
+        <section className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
+          <StatBox
+            label="Active Resumes"
+            value={stats.total}
+            icon={<Layers size={18} />}
+          />
+          <StatBox
+            label="Available Slots"
+            value={stats.remaining}
+            icon={<Database size={18} />}
+          />
+          <div className="md:col-span-2 bg-white border border-slate-100 rounded-3xl p-6 flex flex-col justify-between shadow-sm">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                Storage Efficiency
+              </span>
+              <span className="text-xs font-bold text-[#E11D48]">
+                {stats.usagePercent}%
+              </span>
             </div>
-          </motion.div>
-
-          {/* ACTION & CAPACITY CARDS */}
-          <div className="lg:col-span-4 grid grid-cols-1 gap-6">
-            {/* CLEAN RED CREATE CARD */}
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={createResume}
-              className="bg-red-600 rounded-[2.5rem] p-8 text-white flex flex-col justify-between items-start text-left shadow-xl shadow-red-100 group relative overflow-hidden"
-            >
-              <div className="p-3 bg-white/20 rounded-2xl">
-                <Plus size={24} strokeWidth={3} />
-              </div>
-              <div>
-                <h4 className="text-3xl font-black mb-1">Create New</h4>
-                <p className="text-xs font-black uppercase tracking-widest opacity-90">
-                  Design your next resume
-                </p>
-              </div>
-            </motion.button>
-
-            {/* CAPACITY CARD */}
-            <div className="bg-white border-2 border-slate-100 rounded-[2.5rem] p-8 flex flex-col justify-between shadow-sm">
-              <div className="flex justify-between items-start">
-                <div className="p-3 bg-red-50 rounded-2xl text-red-600">
-                  <TrendingUp size={24} />
-                </div>
-                <p className="text-[10px] font-black text-red-600 uppercase tracking-widest">
-                  Storage
-                </p>
-              </div>
-              <div>
-                <h4 className="text-4xl font-black text-slate-900">
-                  {resumes.length}
-                  <span className="text-slate-200 mx-2">/</span>20
-                </h4>
-                <p className="text-xs font-black text-slate-400 uppercase tracking-widest mt-1">
-                  Free Slots Used
-                </p>
-              </div>
+            <div className="h-2 w-full bg-slate-50 rounded-full overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${stats.usagePercent}%` }}
+                className="h-full bg-[#E11D48] rounded-full"
+              />
             </div>
           </div>
         </section>
 
-        {/* DOCUMENTS GRID */}
-        <div className="flex items-center gap-4 mb-10 px-2">
-          <h3 className="text-xs font-black uppercase tracking-[0.4em] text-slate-400">
-            Your Documents
-          </h3>
-          <div className="h-px flex-grow bg-slate-100" />
+        {/* --- ERROR MESSAGE --- */}
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="mb-8 bg-slate-900 text-white px-6 py-4 rounded-xl font-bold text-xs uppercase tracking-widest flex items-center gap-3"
+            >
+              <AlertCircle size={16} className="text-[#E11D48]" />
+              {error}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* --- CREATE ACTION --- */}
+        <div className="mb-10">
+          <button
+            onClick={createResume}
+            disabled={user?.is_blocked}
+            className="h-16 w-full md:w-auto px-12 bg-[#E11D48] hover:bg-[#BE123C] text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-rose-200 transition-all active:scale-95 disabled:opacity-30 flex items-center justify-center gap-3"
+          >
+            <Plus size={20} strokeWidth={3} />
+            Create New Resume
+          </button>
         </div>
 
+        {/* --- RESUME GRID --- */}
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-72 bg-slate-50 animate-pulse rounded-[3rem]"
+                className="h-64 bg-slate-50 rounded-[2.5rem] animate-pulse"
               />
             ))}
           </div>
@@ -235,50 +227,48 @@ const confirmDelete = async () => {
             animate="visible"
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
-            {resumes.map((resume) => (
+            {filteredResumes.map((resume) => (
               <motion.div
                 key={resume.id}
                 variants={itemVariants}
-                whileHover={{ y: -8 }}
-                className="group bg-white border-2 border-slate-50 rounded-[3rem] p-8 transition-all hover:border-red-100 hover:shadow-xl hover:shadow-red-50"
+                className="group bg-white border border-slate-100 rounded-[2.5rem] p-8 hover:border-rose-100 hover:shadow-2xl hover:shadow-rose-900/5 transition-all duration-300"
               >
-                <div className="flex flex-col h-full">
-                  <div className="flex justify-between items-center mb-8">
-                    <div className="size-12 bg-red-50 rounded-2xl flex items-center justify-center text-red-600">
-                      <FileText size={22} />
-                    </div>
-                    <button
-                      onClick={() => setDeleteConfirm(resume.id)}
-                      className="size-10 flex items-center justify-center text-slate-300 hover:text-red-600 transition-colors"
-                    >
-                      <Trash2 size={20} />
-                    </button>
+                <div className="flex justify-between items-start mb-6">
+                  <div className="size-12 bg-slate-50 group-hover:bg-rose-50 text-slate-400 group-hover:text-[#E11D48] rounded-2xl flex items-center justify-center transition-colors">
+                    <FileText size={24} />
                   </div>
+                  <button
+                    onClick={() => setDeleteConfirm(resume.id)}
+                    className="p-2 text-slate-200 hover:text-rose-600 transition-colors"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </div>
 
-                  <h3 className="text-xl font-black text-slate-800 mb-2 truncate group-hover:text-red-600">
-                    {resume.title || "Untitled Resume"}
-                  </h3>
-                  <div className="flex items-center gap-2 mb-10 text-slate-400">
-                    <Clock size={12} />
-                    <p className="text-[10px] font-bold uppercase tracking-widest">
-                      {new Date(resume.updated_at).toLocaleDateString()}
-                    </p>
-                  </div>
+                <h3 className="font-bold text-lg text-slate-900 mb-1 truncate group-hover:text-[#E11D48] transition-colors">
+                  {resume.title || "Untitled Resume"}
+                </h3>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <button
-                      onClick={() => navigate(`/resume/${resume.id}`)}
-                      className="bg-red-600 text-white py-4 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-red-700 shadow-lg shadow-red-50"
-                    >
-                      Open
-                    </button>
-                    <button
-                      onClick={() => navigate(`/resume/${resume.id}/download`)}
-                      className="bg-white border-2 border-slate-100 text-slate-600 py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest hover:border-red-100 hover:text-red-600 transition-all"
-                    >
-                      Export
-                    </button>
-                  </div>
+                <div className="flex items-center gap-2 text-slate-400 mb-8 text-[10px] font-black uppercase tracking-widest">
+                  <Clock size={12} />
+                  <span>
+                    Saved {new Date(resume.updated_at).toLocaleDateString()}
+                  </span>
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => navigate(`/resume/${resume.id}`)}
+                    className="flex-1 h-12 bg-slate-900 text-white rounded-xl font-bold text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#E11D48] transition-all"
+                  >
+                    Open <ArrowUpRight size={14} />
+                  </button>
+                  <button
+                    onClick={() => navigate(`/resume/${resume.id}/download`)}
+                    className="size-12 border border-slate-100 rounded-xl flex items-center justify-center text-slate-400 hover:text-[#E11D48] hover:border-rose-100 transition-all"
+                  >
+                    <Download size={18} />
+                  </button>
                 </div>
               </motion.div>
             ))}
@@ -286,43 +276,59 @@ const confirmDelete = async () => {
         )}
       </main>
 
-      {/* MODALS */}
+      {/* --- DELETE MODAL --- */}
       <AnimatePresence>
         {deleteConfirm && (
-          <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-slate-900/20 backdrop-blur-sm">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-sm">
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="bg-white p-12 rounded-[3.5rem] shadow-2xl max-w-md w-full text-center border-b-8 border-red-600"
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white p-10 rounded-[3rem] shadow-2xl max-w-sm w-full text-center border border-slate-100"
             >
-              <div className="size-20 bg-red-50 text-red-600 rounded-[2rem] flex items-center justify-center mx-auto mb-8">
-                <Trash2 size={32} />
+              <div className="size-16 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-6 text-[#E11D48]">
+                <AlertCircle size={32} />
               </div>
-              <h3 className="text-2xl font-black text-slate-900 mb-2 uppercase tracking-tighter">
-                Delete Resume?
-              </h3>
-              <p className="text-slate-500 font-medium mb-10 leading-relaxed text-sm">
-                This action will permanently remove this record from your
-                storage slots.
+              <h3 className="text-xl font-black mb-2">Delete Resume?</h3>
+              <p className="text-slate-500 text-sm mb-10 font-medium px-4 leading-relaxed">
+                This will remove your data from our database permanently.
               </p>
-              <div className="flex gap-4">
-                <button
-                  onClick={() => setDeleteConfirm(null)}
-                  className="flex-1 py-4 font-black uppercase tracking-widest text-slate-400 text-xs"
-                >
-                  Keep
-                </button>
+              <div className="flex flex-col gap-3">
                 <button
                   onClick={confirmDelete}
-                  className="flex-1 bg-red-600 text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs"
+                  className="w-full py-4 bg-[#E11D48] hover:bg-[#BE123C] text-white rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all"
                 >
-                  Confirm
+                  Delete Permanently
+                </button>
+                <button
+                  onClick={() => setDeleteConfirm(null)}
+                  className="w-full py-4 bg-slate-50 text-slate-500 rounded-2xl font-black text-[10px] uppercase tracking-widest"
+                >
+                  Go Back
                 </button>
               </div>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
+    </div>
+  );
+}
+
+function StatBox({ label, value, icon }) {
+  return (
+    <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm flex items-center gap-5">
+      <div className="size-12 bg-rose-50 rounded-2xl flex items-center justify-center text-[#E11D48]">
+        {icon}
+      </div>
+      <div>
+        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+          {label}
+        </p>
+        <p className="text-2xl font-black text-slate-900 leading-none">
+          {value}
+        </p>
+      </div>
     </div>
   );
 }

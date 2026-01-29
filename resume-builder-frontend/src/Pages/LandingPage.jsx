@@ -17,7 +17,7 @@ export default function LandingPage() {
             <div className="bg-red-600 p-2 rounded-xl text-white shadow-lg shadow-red-200 group-hover:scale-105 transition-all">
               <span className="material-symbols-outlined text-xl font-bold">description</span>
             </div>
-            <h2 className="text-xl font-bold tracking-tight">Resume<span className="text-red-600">Pro</span></h2>
+            <h2 className="text-xl font-bold tracking-tight">Resume<span className="text-red-600">  Pro</span></h2>
           </div>
 
           <div className="flex items-center gap-6">
@@ -122,10 +122,10 @@ export default function LandingPage() {
   <div className="max-w-7xl mx-auto px-6">
     <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 text-center md:text-left">
       <div className="max-w-xl">
-        <h2 className="text-4xl font-bold tracking-tight text-slate-900 mb-4 uppercase">
+        <h2 className="text-4xl font-bold tracking-tight leading-[1.3] text-slate-900 mb-4 uppercase">
           Expertly Crafted <span className="text-red-600 italic">Templates</span>
         </h2>
-        <p className="text-slate-500 font-medium leading-relaxed uppercase text-xs tracking-widest">
+        <p className="text-slate-500 font-medium  tracking-tight leading-[1.3] uppercase text-xs ">
           Recruiter-approved designs tailored for every industry.
         </p>
       </div>
@@ -237,10 +237,10 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-10">
           <div className="flex flex-col items-center md:items-start gap-3">
             <div className="flex items-center gap-2">
-              <div className="bg-slate-900 p-2 rounded-xl text-white">
+              <div className="bg-red-600 p-2 rounded-xl text-white">
                 <span className="material-symbols-outlined text-sm font-bold">description</span>
               </div>
-              <span className="text-xl font-bold tracking-tight uppercase">Resume<span className="text-red-600">Pro</span></span>
+              <h2 className="text-xl font-bold tracking-tight">Resume<span className="text-red-600">  Pro</span></h2>
             </div>
             <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Built for the future of work.</p>
           </div>
@@ -250,7 +250,7 @@ export default function LandingPage() {
             <a href="#" className="hover:text-red-600 transition-colors">Support</a>
           </nav>
           <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">
-            © 2026 ResumePro • All Rights Reserved
+            © 2026 ResumePro • All Rights Reserved to Arjo Ghosh • 
           </p>
         </div>
       </footer>

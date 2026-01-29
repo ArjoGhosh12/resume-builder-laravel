@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { ArrowLeft } from "lucide-react"; // Added for the back icon
 
 export default function Login() {
   const navigate = useNavigate();
@@ -17,37 +18,53 @@ export default function Login() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
- const { login } = useAuth();
+  const { login } = useAuth();
 
-const handleLogin = async (e) => {
-  e.preventDefault();
-  setError("");
-  setLoading(true);
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-  try {
-    await login(form.email, form.password);
-    navigate("/dashboard");
-  } catch (err) {
-    setError(err.response?.data?.message || "Invalid credentials");
-  } finally {
-    setLoading(false);
-  }
-};
+    try {
+      const user = await login(form.email, form.password);
+
+      if (user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/dashboard");
+      }
+    } catch (err) {
+      setError("Invalid credentials");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen w-full bg-background-light dark:bg-background-dark flex flex-col">
-      <div className="h-12" />
+      {/* Header with Back Button */}
+      <header className="p-6">
+        <button
+          onClick={() => navigate("/")}
+          className="group flex items-center gap-2 text-gray-500 hover:text-red-600 transition-all duration-200"
+        >
+          <div className="p-2 rounded-full group-hover:bg-red-50 transition-colors">
+            <ArrowLeft size={20} />
+          </div>
+          <span className="text-sm font-medium">Back to home</span>
+        </button>
+      </header>
 
       <main className="flex-1 flex flex-col items-center justify-center px-6">
         {/* Logo */}
         <div className="mb-10 flex flex-col items-center">
-          <div className="size-14 bg-primary rounded-xl flex items-center justify-center text-white mb-4">
+          <div className="size-14 bg-red-600 rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-red-100">
             <span className="material-symbols-outlined text-3xl">
               description
             </span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            ResumePro
+            Resume <span className="text-red-600">PRO</span>
           </h1>
         </div>
 
@@ -81,7 +98,7 @@ const handleLogin = async (e) => {
                 onChange={handleChange}
                 required
                 placeholder="you@example.com"
-                className="h-12 px-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent"
+                className="h-12 px-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-600 transition-all"
               />
             </div>
 
@@ -97,14 +114,14 @@ const handleLogin = async (e) => {
                 onChange={handleChange}
                 required
                 placeholder="••••••••"
-                className="h-12 px-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent"
+                className="h-12 px-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-600 transition-all"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-12 bg-primary text-white font-semibold rounded-lg disabled:opacity-60"
+              className="w-full h-12 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg disabled:opacity-60 transition-colors shadow-md shadow-red-100"
             >
               {loading ? "Signing in..." : "Sign In"}
             </button>
@@ -113,7 +130,7 @@ const handleLogin = async (e) => {
 
         <p className="mt-8 text-sm text-gray-500">
           Don&apos;t have an account?{" "}
-          <Link to="/signup" className="text-primary font-semibold">
+          <Link to="/signup" className="text-red-600 font-semibold hover:underline">
             Create one
           </Link>
         </p>

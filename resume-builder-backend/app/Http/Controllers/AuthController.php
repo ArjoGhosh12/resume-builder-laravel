@@ -7,23 +7,29 @@ use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
     public function register(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'username' => 'required|string|unique:users',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-        ]);
+{
+    $validated = $request->validate([
+        'name' => 'required|string',
+        'username' => 'required|string|unique:users',
+        'email' => 'required|email|unique:users',
+        'password' => 'required|min:6',
+    ]);
 
-        $user = User::create($validated);
+    $user = User::create([
+        'name' => $validated['name'],
+        'username' => $validated['username'],
+        'email' => $validated['email'],
+        'password' => Hash::make($validated['password']), // 🔥 FIX
+    ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+    $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()->json([
-            'user' => $user,
-            'token' => $token,
-        ], 201);
-    }
+    return response()->json([
+        'user' => $user,
+        'token' => $token,
+    ], 201);
+}
+
 
    public function login(Request $request)
 {
@@ -34,7 +40,7 @@ class AuthController extends Controller
 
     $user = User::where('email', $request->email)->first();
 
-    if (! $user || $request->password !== $user->password) {
+    if (! $user || ! Hash::check($request->password, $user->password)) {
         return response()->json([
             'message' => 'Invalid credentials'
         ], 401);
@@ -47,6 +53,7 @@ class AuthController extends Controller
         'token' => $token,
     ]);
 }
+
 
     public function logout(Request $request)
     {

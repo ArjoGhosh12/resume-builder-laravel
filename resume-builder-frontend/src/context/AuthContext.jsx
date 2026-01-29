@@ -19,7 +19,7 @@ export function AuthProvider({ children }) {
     api
       .get("/me")
       .then((res) => {
-        setUser(res.data);
+        setUser(res.data); // must include role
       })
       .catch(() => {
         localStorage.removeItem("token");
@@ -49,22 +49,16 @@ export function AuthProvider({ children }) {
   };
 
   /* ---------------- Logout ---------------- */
-  const logout = async () => {
-    try {
-      await api.post("/logout");
-    } catch (_) {
-      // ignore
-    } finally {
-      localStorage.removeItem("token");
-      setUser(null);
-      window.location.href = "/";
-    }
+  const logout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
+        role: user?.role || "guest",
         isAuthenticated: !!user,
         loading,
         login,

@@ -221,9 +221,9 @@ const [error, setError] = useState(null);
       <nav className="sticky top-0 z-50 bg-white border-b border-gray-100">
         <div className="max-w-[1500px] mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-10">
-            <h1 className="font-bold text-xl text-slate-800">
-              Resume <span className="text-red-500">Builder</span>
-            </h1>
+             <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            Resume<span className="text-2xl text-red-500 font-bold"> Pro</span>
+          </h1>
 
             {/* Template Dropdown */}
             <div className="relative">
