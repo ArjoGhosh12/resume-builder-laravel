@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://laravel-backend-latest-35u3.onrender.com/api",
+  baseURL: "https://laravel-backend-v1.onrender.com/api",
   headers: {
     Accept: "application/json",
   },
