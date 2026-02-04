@@ -10,8 +10,8 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    
     use HasApiTokens, HasFactory, HasUuids, Notifiable;
+
     protected $keyType = 'string';
     public $incrementing = false;
 
@@ -20,6 +20,8 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
+        'role',        // add
+        'is_blocked'   // add (since you toggle it)
     ];
 
     protected $hidden = [
@@ -32,6 +34,14 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_blocked' => 'boolean'
         ];
     }
+
+    
+    public function resumes()
+    {
+        return $this->hasMany(\App\Models\Resume::class, 'user_id');
+    }
 }
+
